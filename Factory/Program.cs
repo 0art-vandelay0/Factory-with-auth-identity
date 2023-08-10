@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Factory.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Factory
 {
@@ -22,6 +23,9 @@ namespace Factory
                                 )
                             );
 
+            // new lines with Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<FactoryContext>().AddDefaultTokenProviders();
+
             WebApplication app = builder.Build();
 
             // app.UseDeveloperExceptionPage();
@@ -29,6 +33,9 @@ namespace Factory
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
