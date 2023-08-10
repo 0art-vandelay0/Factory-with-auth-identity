@@ -1,23 +1,38 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Factory.Models;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Factory.Controllers
 {
     public class MachinesController : Controller
     {
         private readonly FactoryContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public MachinesController(FactoryContext db)
+        public MachinesController(UserManager<ApplicationUser> userManager, FactoryContext db)
         {
+            _userManager = userManager;
             _db = db;
         }
 
-        public ActionResult Index()
+        // public ActionResult Index()
+        // {
+        //     return View(_db.Machines.ToList());
+        // }
+
+        public async Task<ActionResult> Index()
         {
-            return View(_db.Machines.ToList());
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+            List<Machine> userMachines = _db.Machines.Where(entry => entry.User.Id == currentUser.Id).Include(machine => machine.JoinEntities).ThenInclude(join => join.Engineer).ToList();
+            return View(userMachines);
         }
 
         public ActionResult Create()
@@ -26,15 +41,34 @@ namespace Factory.Controllers
             return View();
         }
 
+        // [HttpPost]
+        // public ActionResult Create(Machine machine)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return View(machine);
+        //     }
+        //     else
+        //     {
+        //         _db.Machines.Add(machine);
+        //         _db.SaveChanges();
+        //         return RedirectToAction("Index");
+        //     }
+        // }
+
         [HttpPost]
-        public ActionResult Create(Machine machine)
+        public async Task<ActionResult> Create(Machine machine, int EngineerId)
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.EngineerId = new SelectList(_db.Engineers, "EngineerId", "Name");
                 return View(machine);
             }
             else
             {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+                machine.User = currentUser;
                 _db.Machines.Add(machine);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
