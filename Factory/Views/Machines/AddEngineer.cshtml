@@ -1,0 +1,23 @@
+@{
+    Layout = "_Layout";
+}
+
+@model Factory.Models.Machine
+
+<h2>Add a licensed Engineer</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.MachineId)
+    @Html.Label("Select an Engineer")
+    @Html.DropDownList("EngineerId")
+    <br>
+
+    <input id="button" type="submit" value="Save" />
+}
+
+<div id="nav-links">
+    <p>@Html.ActionLink($"{Model.Name} Details", "Details", "Machines")</p>
+    <p>@Html.ActionLink("Home", "Index", "Home")</p>
+    <p>@Html.ActionLink("Machines", "Index", "Machines")</p>
+</div>

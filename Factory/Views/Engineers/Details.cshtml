@@ -1,0 +1,37 @@
+@{
+    Layout = "_Layout";
+}
+
+@using Factory.Models
+@model Factory.Models.Engineer
+
+
+<div id="object-deets">
+    <h1 class="display-name">@Html.DisplayFor(model => model.Name)<h1>
+
+    @if (@Model.JoinEntities.Count == 0)
+            {
+                    <h3>This engineer is not liscensed to repair any machines.</h3>
+            }
+            else
+            {
+                    <h3>Machines:</h3>
+                    <ul class="engineer-machine-link">
+                    @foreach (var machine in Model.JoinEntities)
+                    {
+                                        <li class="list-margins">@Html.ActionLink($"{machine.Machine.Name}", "Details", "Machines", new {id = machine.MachineId})</li>
+                    }
+                    </ul>
+            }
+</div>
+
+
+    <p class="add-to-list">@Html.ActionLink("Add Machine Here", "AddMachine", "Engineers", new {id = Model.EngineerId})</p>
+
+<div id="nav-links">
+
+    <p>@Html.ActionLink("Engineers", "Index", "Engineers")</p>
+    <p>@Html.ActionLink("Home", "Index", "Home")</p>
+    <p>@Html.ActionLink("Edit Engineer", "Edit", "Engineers", new { id = Model.EngineerId })</p>
+    <p>@Html.ActionLink("Delete Engineer", "Delete", new { id = Model.EngineerId })</p>
+</div>

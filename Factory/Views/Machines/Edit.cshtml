@@ -1,0 +1,31 @@
+@{
+    Layout = "_Layout";
+} 
+
+@model Factory.Models.Machine
+
+<h4>Update Machine Details</h4>
+
+@using(Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.MachineId)
+    <br>
+
+    @Html.LabelFor(model => model.Name)
+    <br>
+    @Html.EditorFor(model => model.Name)
+    <br>
+
+    @Html.Label("Select Engineer")
+    @Html.DropDownList("EngineerId")
+    <br>
+
+    <input type="submit" value="Save" />
+}
+
+<div id="nav-links">
+    <p>@Html.ActionLink("Machines", "Index", "Machines")</p>
+    <p>@Html.ActionLink("Home", "Index", "Home")</p>
+    <p>@Html.ActionLink("Delete Machine", "Delete", new { id = Model.MachineId })</p>
+    
+</div>
