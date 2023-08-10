@@ -18,8 +18,21 @@
     </p>
 </div>
 
-<div id="nav-links">
-    <p>@Html.ActionLink("Engineers", "Index", "Engineers")</p>
-    <p>@Html.ActionLink("Machines", "Index", "Machines")</p>
-</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <div id="nav-links">
+        <p>@Html.ActionLink("Engineers", "Index", "Engineers")</p>
+        <p>@Html.ActionLink("Machines", "Index", "Machines")</p>
+    </div>
+}
+else
+{
+    
+
+    <p id="empty-value-div">Please login or register to view or manage the system.</p>
+
+    <div id="empty-value-div">
+        <p>@Html.ActionLink("Register", "Register", "Account")  &nbsp;&nbsp;|&nbsp;&nbsp;  @Html.ActionLink("Log in", "Login", "Account")</p>
+    </div>
+}
 
