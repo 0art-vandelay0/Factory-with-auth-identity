@@ -9,5 +9,7 @@ namespace Factory.Models
         [Required(ErrorMessage = "Machine's Name required")]
         public string Name { get; set; }
         public List<EngineerMachine> JoinEntities { get; set; }
+
+        public ApplicationUser User { get; set; }
     }
 }
